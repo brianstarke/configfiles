@@ -10,23 +10,6 @@ CYAN='\033[0;36m'
 WHITE='\033[1;37m'
 NC='\033[0m' # No Color
 
-# ASCII Art
-echo -e "${CYAN}"
-cat << "EOF"
-                   ___                                      
-                  <___>                                     
-     __       ,--'```) (```'--.       __                      
-    //\\ _,-;' `--._______,--' `:-._ //\\    
-    \\ ;'  ;                     :  `: //                     
-     `(   ;                       :   )'     
-       :.(                         ),;       
-        `.`--.___           ___.--','                         
-          `.     ``-------''     ,'                           
-             -.               ,-                              
-               `-._______.-'
-EOF
-echo -e "${NC}"
-
 echo -e "${RED}🔥 ${YELLOW}TERMINAL ${GREEN}SETUP ${BLUE}WIZARD ${PURPLE}🔥${NC}"
 echo -e "${CYAN}✨ Let's make your terminal absolutely legendary! ✨${NC}"
 echo ""
@@ -220,7 +203,7 @@ else
 fi
 
 # Install lazygit and ripgrep
-echo -e "${BLUE}⚡ Installing development tools (lazygit, ripgrep, eza, fzf, zoxide, bat)...${NC}"
+echo -e "${BLUE}⚡ Installing development tools (lazygit, ripgrep, eza, fzf, zoxide, bat, neovim, luarocks)...${NC}"
 
 # Detect package manager and install tools
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -305,6 +288,32 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
                 echo -e "${GREEN}✅ bat installed successfully!${NC}"
             else
                 echo -e "${RED}❌ Failed to install bat${NC}"
+            fi
+        fi
+        
+        # Install neovim
+        if command -v nvim &> /dev/null; then
+            echo -e "${GREEN}✅ neovim is already installed!${NC}"
+        else
+            echo -e "${YELLOW}📦 Installing neovim...${NC}"
+            brew install neovim
+            if [ $? -eq 0 ]; then
+                echo -e "${GREEN}✅ neovim installed successfully!${NC}"
+            else
+                echo -e "${RED}❌ Failed to install neovim${NC}"
+            fi
+        fi
+        
+        # Install luarocks
+        if command -v luarocks &> /dev/null; then
+            echo -e "${GREEN}✅ luarocks is already installed!${NC}"
+        else
+            echo -e "${YELLOW}📦 Installing luarocks...${NC}"
+            brew install luarocks
+            if [ $? -eq 0 ]; then
+                echo -e "${GREEN}✅ luarocks installed successfully!${NC}"
+            else
+                echo -e "${RED}❌ Failed to install luarocks${NC}"
             fi
         fi
     else
@@ -438,6 +447,32 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
             fi
         fi
         
+        # Install neovim
+        if command -v nvim &> /dev/null; then
+            echo -e "${GREEN}✅ neovim is already installed!${NC}"
+        else
+            echo -e "${YELLOW}📦 Installing neovim...${NC}"
+            sudo yum install -y neovim
+            if [ $? -eq 0 ]; then
+                echo -e "${GREEN}✅ neovim installed successfully!${NC}"
+            else
+                echo -e "${RED}❌ Failed to install neovim${NC}"
+            fi
+        fi
+        
+        # Install luarocks
+        if command -v luarocks &> /dev/null; then
+            echo -e "${GREEN}✅ luarocks is already installed!${NC}"
+        else
+            echo -e "${YELLOW}📦 Installing luarocks...${NC}"
+            sudo yum install -y luarocks
+            if [ $? -eq 0 ]; then
+                echo -e "${GREEN}✅ luarocks installed successfully!${NC}"
+            else
+                echo -e "${RED}❌ Failed to install luarocks${NC}"
+            fi
+        fi
+        
         echo -e "${YELLOW}⚠️  Please install lazygit manually from: https://github.com/jesseduffield/lazygit${NC}"
         
     elif command -v pacman &> /dev/null; then
@@ -506,11 +541,37 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
                 echo -e "${RED}❌ Failed to install bat${NC}"
             fi
         fi
+        
+        # Install neovim
+        if command -v nvim &> /dev/null; then
+            echo -e "${GREEN}✅ neovim is already installed!${NC}"
+        else
+            echo -e "${YELLOW}📦 Installing neovim...${NC}"
+            sudo pacman -S --noconfirm neovim
+            if [ $? -eq 0 ]; then
+                echo -e "${GREEN}✅ neovim installed successfully!${NC}"
+            else
+                echo -e "${RED}❌ Failed to install neovim${NC}"
+            fi
+        fi
+        
+        # Install luarocks
+        if command -v luarocks &> /dev/null; then
+            echo -e "${GREEN}✅ luarocks is already installed!${NC}"
+        else
+            echo -e "${YELLOW}📦 Installing luarocks...${NC}"
+            sudo pacman -S --noconfirm luarocks
+            if [ $? -eq 0 ]; then
+                echo -e "${GREEN}✅ luarocks installed successfully!${NC}"
+            else
+                echo -e "${RED}❌ Failed to install luarocks${NC}"
+            fi
+        fi
     else
         echo -e "${YELLOW}⚠️  No supported package manager found. Please install lazygit and ripgrep manually.${NC}"
     fi
 else
-    echo -e "${YELLOW}⚠️  Tool installation not supported on this OS. Please install lazygit, ripgrep, eza, fzf, zoxide, and bat manually.${NC}"
+    echo -e "${YELLOW}⚠️  Tool installation not supported on this OS. Please install lazygit, ripgrep, eza, fzf, zoxide, bat, neovim, and luarocks manually.${NC}"
 fi
 
 # Set zsh as default shell

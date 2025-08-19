@@ -64,5 +64,30 @@ else
     echo -e "${YELLOW}⚠️  Config directory not found in repository: $REPO_CONFIG_DIR${NC}"
 fi
 
+# Copy nvim config specifically if it exists in repo
+NVIM_SOURCE="$REPO_DIR/config/nvim"
+NVIM_DEST="$HOME/.config/nvim"
+if [ -d "$NVIM_SOURCE" ]; then
+    echo -e "${BLUE}⚡ Copying nvim config to $NVIM_DEST${NC}"
+    
+    # Backup existing nvim config if it exists
+    if [ -d "$NVIM_DEST" ]; then
+        echo -e "${YELLOW}💾 Backing up existing nvim config to nvim.backup${NC}"
+        mv "$NVIM_DEST" "$NVIM_DEST.backup"
+    fi
+    
+    # Copy the entire nvim directory
+    cp -r "$NVIM_SOURCE" "$NVIM_DEST"
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}✅ nvim config installed successfully!${NC}"
+    else
+        echo -e "${RED}❌ Failed to copy nvim config${NC}"
+        exit 1
+    fi
+else
+    echo -e "${YELLOW}⚠️  nvim config not found in repository: $NVIM_SOURCE${NC}"
+fi
+
 echo -e "${CYAN}🎉 Local configs updated from repository!${NC}"
 echo -e "${YELLOW}💡 Restart your terminal or run 'source ~/.zshrc' to apply changes${NC}"

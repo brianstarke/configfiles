@@ -13,12 +13,6 @@ echo -e "${CYAN}🚀 Updating configs from local system...${NC}"
 # Base directory for this repo
 REPO_DIR="$(dirname "$0")/.."
 
-# Source and destination paths
-SPACESHIP_SOURCE="$HOME/.config/spaceship.zsh"
-SPACESHIP_DEST="$REPO_DIR/config/spaceship.zsh"
-ZSHRC_SOURCE="$HOME/.zshrc"
-ZSHRC_DEST="$REPO_DIR/config/.zshrc"
-
 # Create config directory if it doesn't exist
 CONFIG_DIR="$REPO_DIR/config"
 if [ ! -d "$CONFIG_DIR" ]; then
@@ -26,7 +20,27 @@ if [ ! -d "$CONFIG_DIR" ]; then
     mkdir -p "$CONFIG_DIR"
 fi
 
+# Copy root .zshrc if it exists
+ZSHRC_SOURCE="$HOME/.zshrc"
+ZSHRC_DEST="$REPO_DIR/.zshrc"
+if [ -f "$ZSHRC_SOURCE" ]; then
+    echo -e "${BLUE}🐚 Copying .zshrc from $ZSHRC_SOURCE${NC}"
+    cp "$ZSHRC_SOURCE" "$ZSHRC_DEST"
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}✅ .zshrc updated successfully!${NC}"
+    else
+        echo -e "${RED}❌ Failed to copy .zshrc${NC}"
+        exit 1
+    fi
+else
+    echo -e "${RED}❌ .zshrc not found: $ZSHRC_SOURCE${NC}"
+    exit 1
+fi
+
 # Copy Spaceship config
+SPACESHIP_SOURCE="$HOME/.config/spaceship.zsh"
+SPACESHIP_DEST="$CONFIG_DIR/spaceship.zsh"
 if [ -f "$SPACESHIP_SOURCE" ]; then
     echo -e "${BLUE}🚀 Copying Spaceship config from $SPACESHIP_SOURCE${NC}"
     cp "$SPACESHIP_SOURCE" "$SPACESHIP_DEST"
@@ -41,20 +55,28 @@ else
     echo -e "${YELLOW}⚠️  Spaceship config not found: $SPACESHIP_SOURCE${NC}"
 fi
 
-# Copy .zshrc
-if [ -f "$ZSHRC_SOURCE" ]; then
-    echo -e "${BLUE}🐚 Copying .zshrc from $ZSHRC_SOURCE${NC}"
-    cp "$ZSHRC_SOURCE" "$ZSHRC_DEST"
+# Copy nvim config if it exists
+NVIM_SOURCE="$HOME/.config/nvim"
+NVIM_DEST="$CONFIG_DIR/nvim"
+if [ -d "$NVIM_SOURCE" ]; then
+    echo -e "${BLUE}⚡ Copying nvim config from $NVIM_SOURCE${NC}"
+    
+    # Remove existing nvim config in repo if it exists
+    if [ -d "$NVIM_DEST" ]; then
+        rm -rf "$NVIM_DEST"
+    fi
+    
+    # Copy the entire nvim directory
+    cp -r "$NVIM_SOURCE" "$NVIM_DEST"
     
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✅ .zshrc updated successfully!${NC}"
+        echo -e "${GREEN}✅ nvim config copied successfully!${NC}"
     else
-        echo -e "${RED}❌ Failed to copy .zshrc${NC}"
+        echo -e "${RED}❌ Failed to copy nvim config${NC}"
         exit 1
     fi
 else
-    echo -e "${RED}❌ .zshrc not found: $ZSHRC_SOURCE${NC}"
-    exit 1
+    echo -e "${YELLOW}⚠️  nvim config not found: $NVIM_SOURCE${NC}"
 fi
 
 echo -e "${CYAN}📄 Configs saved to: $CONFIG_DIR${NC}"
