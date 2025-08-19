@@ -13,11 +13,10 @@ echo -e "${CYAN}🚀 Updating local configs from repository...${NC}"
 # Base directory for this repo
 REPO_DIR="$(dirname "$0")/.."
 
-# Source and destination paths
-SPACESHIP_SOURCE="$REPO_DIR/config/spaceship.zsh"
-SPACESHIP_DEST="$HOME/.config/spaceship.zsh"
-ZSHRC_SOURCE="$REPO_DIR/config/.zshrc"
-ZSHRC_DEST="$HOME/.zshrc"
+echo -e "${CYAN}🚀 Updating local configs from repository...${NC}"
+
+# Base directory for this repo
+REPO_DIR="$(dirname "$0")/.."
 
 # Create ~/.config directory if it doesn't exist
 CONFIG_DIR="$HOME/.config"
@@ -26,41 +25,43 @@ if [ ! -d "$CONFIG_DIR" ]; then
     mkdir -p "$CONFIG_DIR"
 fi
 
-# Copy Spaceship config
-if [ -f "$SPACESHIP_SOURCE" ]; then
-    echo -e "${BLUE}🚀 Copying Spaceship config to $SPACESHIP_DEST${NC}"
-    cp "$SPACESHIP_SOURCE" "$SPACESHIP_DEST"
+# Copy root .zshrc if it exists
+ROOT_ZSHRC="$REPO_DIR/.zshrc"
+if [ -f "$ROOT_ZSHRC" ]; then
+    # Backup existing .zshrc if it exists
+    if [ -f "$HOME/.zshrc" ]; then
+        echo -e "${YELLOW}💾 Backing up existing .zshrc to .zshrc.backup${NC}"
+        cp "$HOME/.zshrc" "$HOME/.zshrc.backup"
+    fi
+    
+    echo -e "${BLUE}🐚 Copying root .zshrc to $HOME/.zshrc${NC}"
+    cp "$ROOT_ZSHRC" "$HOME/.zshrc"
     
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✅ Spaceship config installed successfully!${NC}"
+        echo -e "${GREEN}✅ Root .zshrc installed successfully!${NC}"
     else
-        echo -e "${RED}❌ Failed to copy Spaceship config${NC}"
+        echo -e "${RED}❌ Failed to copy root .zshrc${NC}"
         exit 1
     fi
 else
-    echo -e "${YELLOW}⚠️  Spaceship config not found in repository: $SPACESHIP_SOURCE${NC}"
+    echo -e "${YELLOW}⚠️  Root .zshrc not found in repository: $ROOT_ZSHRC${NC}"
 fi
 
-# Copy .zshrc
-if [ -f "$ZSHRC_SOURCE" ]; then
-    # Backup existing .zshrc if it exists
-    if [ -f "$ZSHRC_DEST" ]; then
-        echo -e "${YELLOW}💾 Backing up existing .zshrc to .zshrc.backup${NC}"
-        cp "$ZSHRC_DEST" "$ZSHRC_DEST.backup"
-    fi
+# Copy all contents of config directory to ~/.config
+REPO_CONFIG_DIR="$REPO_DIR/config"
+if [ -d "$REPO_CONFIG_DIR" ]; then
+    echo -e "${BLUE}📋 Copying all config files from $REPO_CONFIG_DIR to $CONFIG_DIR${NC}"
     
-    echo -e "${BLUE}🐚 Copying .zshrc to $ZSHRC_DEST${NC}"
-    cp "$ZSHRC_SOURCE" "$ZSHRC_DEST"
+    # Copy all files and directories from repo config to local config
+    cp -r "$REPO_CONFIG_DIR"/* "$CONFIG_DIR/" 2>/dev/null
     
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✅ .zshrc installed successfully!${NC}"
+        echo -e "${GREEN}✅ Config files copied successfully!${NC}"
     else
-        echo -e "${RED}❌ Failed to copy .zshrc${NC}"
-        exit 1
+        echo -e "${YELLOW}⚠️  Some config files may not have been copied${NC}"
     fi
 else
-    echo -e "${RED}❌ .zshrc not found in repository: $ZSHRC_SOURCE${NC}"
-    exit 1
+    echo -e "${YELLOW}⚠️  Config directory not found in repository: $REPO_CONFIG_DIR${NC}"
 fi
 
 echo -e "${CYAN}🎉 Local configs updated from repository!${NC}"
