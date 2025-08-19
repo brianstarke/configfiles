@@ -94,6 +94,7 @@ fi
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias cat='bat'
 
 # Add paths 
 [[ ":$PATH:" != *":$HOME/google-cloud-sdk/bin:"* ]] && export PATH="$HOME/google-cloud-sdk/bin:$PATH"

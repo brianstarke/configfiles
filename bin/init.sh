@@ -220,7 +220,7 @@ else
 fi
 
 # Install lazygit and ripgrep
-echo -e "${BLUE}⚡ Installing development tools (lazygit, ripgrep, eza, fzf, zoxide)...${NC}"
+echo -e "${BLUE}⚡ Installing development tools (lazygit, ripgrep, eza, fzf, zoxide, bat)...${NC}"
 
 # Detect package manager and install tools
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -292,6 +292,19 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
                 echo -e "${CYAN}💡 Add 'eval \"\$(zoxide init zsh)\"' to your .zshrc${NC}"
             else
                 echo -e "${RED}❌ Failed to install zoxide${NC}"
+            fi
+        fi
+        
+        # Install bat
+        if command -v bat &> /dev/null; then
+            echo -e "${GREEN}✅ bat is already installed!${NC}"
+        else
+            echo -e "${YELLOW}📦 Installing bat...${NC}"
+            brew install bat
+            if [ $? -eq 0 ]; then
+                echo -e "${GREEN}✅ bat installed successfully!${NC}"
+            else
+                echo -e "${RED}❌ Failed to install bat${NC}"
             fi
         fi
     else
@@ -412,6 +425,19 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
             fi
         fi
         
+        # Install bat
+        if command -v bat &> /dev/null; then
+            echo -e "${GREEN}✅ bat is already installed!${NC}"
+        else
+            echo -e "${YELLOW}📦 Installing bat...${NC}"
+            sudo yum install -y bat
+            if [ $? -eq 0 ]; then
+                echo -e "${GREEN}✅ bat installed successfully!${NC}"
+            else
+                echo -e "${RED}❌ Failed to install bat${NC}"
+            fi
+        fi
+        
         echo -e "${YELLOW}⚠️  Please install lazygit manually from: https://github.com/jesseduffield/lazygit${NC}"
         
     elif command -v pacman &> /dev/null; then
@@ -467,11 +493,24 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
                 echo -e "${RED}❌ Failed to install zoxide${NC}"
             fi
         fi
+        
+        # Install bat
+        if command -v bat &> /dev/null; then
+            echo -e "${GREEN}✅ bat is already installed!${NC}"
+        else
+            echo -e "${YELLOW}📦 Installing bat...${NC}"
+            sudo pacman -S --noconfirm bat
+            if [ $? -eq 0 ]; then
+                echo -e "${GREEN}✅ bat installed successfully!${NC}"
+            else
+                echo -e "${RED}❌ Failed to install bat${NC}"
+            fi
+        fi
     else
         echo -e "${YELLOW}⚠️  No supported package manager found. Please install lazygit and ripgrep manually.${NC}"
     fi
 else
-    echo -e "${YELLOW}⚠️  Tool installation not supported on this OS. Please install lazygit, ripgrep, eza, fzf, and zoxide manually.${NC}"
+    echo -e "${YELLOW}⚠️  Tool installation not supported on this OS. Please install lazygit, ripgrep, eza, fzf, zoxide, and bat manually.${NC}"
 fi
 
 # Set zsh as default shell
