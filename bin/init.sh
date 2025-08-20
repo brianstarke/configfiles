@@ -202,8 +202,8 @@ else
     fi
 fi
 
-# Install lazygit and ripgrep
-echo -e "${BLUE}⚡ Installing development tools (lazygit, ripgrep, eza, fzf, zoxide, bat, neovim, luarocks)...${NC}"
+# Install development tools
+echo -e "${BLUE}⚡ Installing development tools (lazygit, ripgrep, eza, fzf, zoxide, bat, neovim, luarocks, tree-sitter)...${NC}"
 
 # Detect package manager and install tools
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -316,6 +316,19 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
                 echo -e "${RED}❌ Failed to install luarocks${NC}"
             fi
         fi
+        
+        # Install tree-sitter
+        if command -v tree-sitter &> /dev/null; then
+            echo -e "${GREEN}✅ tree-sitter is already installed!${NC}"
+        else
+            echo -e "${YELLOW}📦 Installing tree-sitter...${NC}"
+            brew install tree-sitter
+            if [ $? -eq 0 ]; then
+                echo -e "${GREEN}✅ tree-sitter installed successfully!${NC}"
+            else
+                echo -e "${RED}❌ Failed to install tree-sitter${NC}"
+            fi
+        fi
     else
         echo -e "${YELLOW}⚠️  Homebrew not found. Please install Homebrew first or install lazygit and ripgrep manually.${NC}"
     fi
@@ -386,6 +399,24 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
                 echo -e "${CYAN}💡 Add 'eval \"\$(zoxide init zsh)\"' to your .zshrc${NC}"
             else
                 echo -e "${RED}❌ Failed to install zoxide${NC}"
+            fi
+        fi
+        
+        # Install tree-sitter
+        if command -v tree-sitter &> /dev/null; then
+            echo -e "${GREEN}✅ tree-sitter is already installed!${NC}"
+        else
+            echo -e "${YELLOW}📦 Installing tree-sitter...${NC}"
+            # tree-sitter might not be in default repos, try cargo or manual install
+            if command -v cargo &> /dev/null; then
+                cargo install tree-sitter-cli
+                if [ $? -eq 0 ]; then
+                    echo -e "${GREEN}✅ tree-sitter installed successfully via cargo!${NC}"
+                else
+                    echo -e "${YELLOW}⚠️  Failed to install tree-sitter via cargo. Please install manually from: https://github.com/tree-sitter/tree-sitter${NC}"
+                fi
+            else
+                echo -e "${YELLOW}⚠️  Please install tree-sitter manually from: https://github.com/tree-sitter/tree-sitter${NC}"
             fi
         fi
         
@@ -470,6 +501,24 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
                 echo -e "${GREEN}✅ luarocks installed successfully!${NC}"
             else
                 echo -e "${RED}❌ Failed to install luarocks${NC}"
+            fi
+        fi
+        
+        # Install tree-sitter
+        if command -v tree-sitter &> /dev/null; then
+            echo -e "${GREEN}✅ tree-sitter is already installed!${NC}"
+        else
+            echo -e "${YELLOW}📦 Installing tree-sitter...${NC}"
+            # tree-sitter might not be in default repos, try cargo or manual install
+            if command -v cargo &> /dev/null; then
+                cargo install tree-sitter-cli
+                if [ $? -eq 0 ]; then
+                    echo -e "${GREEN}✅ tree-sitter installed successfully via cargo!${NC}"
+                else
+                    echo -e "${YELLOW}⚠️  Failed to install tree-sitter via cargo. Please install manually from: https://github.com/tree-sitter/tree-sitter${NC}"
+                fi
+            else
+                echo -e "${YELLOW}⚠️  Please install tree-sitter manually from: https://github.com/tree-sitter/tree-sitter${NC}"
             fi
         fi
         
@@ -567,11 +616,24 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
                 echo -e "${RED}❌ Failed to install luarocks${NC}"
             fi
         fi
+        
+        # Install tree-sitter
+        if command -v tree-sitter &> /dev/null; then
+            echo -e "${GREEN}✅ tree-sitter is already installed!${NC}"
+        else
+            echo -e "${YELLOW}📦 Installing tree-sitter...${NC}"
+            sudo pacman -S --noconfirm tree-sitter
+            if [ $? -eq 0 ]; then
+                echo -e "${GREEN}✅ tree-sitter installed successfully!${NC}"
+            else
+                echo -e "${RED}❌ Failed to install tree-sitter${NC}"
+            fi
+        fi
     else
         echo -e "${YELLOW}⚠️  No supported package manager found. Please install lazygit and ripgrep manually.${NC}"
     fi
 else
-    echo -e "${YELLOW}⚠️  Tool installation not supported on this OS. Please install lazygit, ripgrep, eza, fzf, zoxide, bat, neovim, and luarocks manually.${NC}"
+    echo -e "${YELLOW}⚠️  Tool installation not supported on this OS. Please install lazygit, ripgrep, eza, fzf, zoxide, bat, neovim, luarocks, and tree-sitter manually.${NC}"
 fi
 
 # Set zsh as default shell
